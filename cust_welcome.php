@@ -5,7 +5,7 @@ global $db;
 global $path;
 session_start();
 //$uname = $_SESSION['username'];
-$uname = "johntest11";
+$uname = "ameysawant11";
 $firstname = $lastname = $getinfo = "";
 
 //FUNCTION FOR GETUSER INFO 1ST BOX
@@ -89,7 +89,7 @@ if(isset($_POST['depo_amo'])) {
     }
     $amo1 = $_POST['dep_amount'];
     $upd_sen_bal1 = $depo_bal1 + $amo1;
-    $upd_sen_bal_q1 = "UPDATE account SET balance = '" . $upd_sen_bal1 . "' WHERE uname = " . $uname . ";";
+    $upd_sen_bal_q1 = "UPDATE account SET balance = '" . $upd_sen_bal1 . "' WHERE uname = '" . $uname . "';";
     $result = $db->query($upd_sen_bal_q1) or die(mysqli_error($db));
     echo '<script>alert("Amount Deposited")</script>';
 
@@ -108,10 +108,18 @@ if(isset($_POST['with_amo'])) {
         echo "0 results";
     }
     $amo2 = $_POST['with_amount'];
-    $upd_sen_bal2 = $depo_bal1 - $amo1;
-    $upd_sen_bal_q2 = "UPDATE account SET balance = '" . $upd_sen_bal2 . "' WHERE acc_no = " . $uname . ";";
-    $result = $db->query($upd_sen_bal_q2) or die(mysqli_error($db));
-    echo '<script>alert("Amount withdraw")</script>';
+    if ($with_bal1>$amo2) {
+        $upd_sen_bal2 = $with_bal1 - $amo2;
+        $upd_sen_bal_q2 = "UPDATE account SET balance = '" . $upd_sen_bal2 . "' WHERE uname = '" . $uname . "';";
+        $result = $db->query($upd_sen_bal_q2) or die(mysqli_error($db));
+        echo '<script>alert("Amount withdrawn")</script>';
+    } else {
+        echo '<script>alert("Insufficient Balance and you have been charged 2 dollars")</script>';
+        $amo3 = 2;
+        $upd_sen_bal3 = $with_bal1 - $amo3;
+        $upd_sen_bal_q3 = "UPDATE account SET balance = '" . $upd_sen_bal3 . "' WHERE uname = '" . $uname . "';";
+        $result = $db->query($upd_sen_bal_q3) or die(mysqli_error($db));
+    }
 
 }
 
